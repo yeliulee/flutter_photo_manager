@@ -2,7 +2,6 @@ import { MethodResult } from '@ohos/flutter_ohos/src/main/ets/plugin/common/Meth
 import { BusinessError } from '@kit.BasicServicesKit';
 import { photoAccessHelper } from '@kit.MediaLibraryKit';
 import fs from '@ohos.file.fs';
-import { PhotoAssetHandler } from './PhotoAssetHandler';
 import { MethodCall } from '@ohos/flutter_ohos';
 import { HandlerBase, MethodCallHandlerBase } from './HandlerBase';
 import { PermissionHandler } from './PermissionHandler';
@@ -94,18 +93,7 @@ export class SaveHandler extends HandlerBase implements MethodCallHandlerBase {
       let assetChangeRequest: photoAccessHelper.MediaAssetChangeRequest = photoAccessHelper.MediaAssetChangeRequest.createAssetRequest(this.uiContext, photoType, extension, createOptions);
       assetChangeRequest.addResource(photoType == photoAccessHelper.PhotoType.IMAGE ? photoAccessHelper.ResourceType.IMAGE_RESOURCE : photoAccessHelper.ResourceType.VIDEO_RESOURCE, buffer);
       await phAccessHelper.applyChanges(assetChangeRequest);
-      let asset = assetChangeRequest.getAsset();
-      let path = asset.uri;
-      let photoAsset: photoAccessHelper.PhotoAsset | null = await PhotoAssetHandler.getPhotoAsset(path);
-      if (photoAsset != null) {
-        result.success(PhotoAssetHandler.photoAssetToMap(photoAsset));
-      }
-      else {
-        if (PhotoManagerPlugin.showLog) {
-          console.info('can not find photo for now', path, '');
-        }
-        result.error('can not find photo for now', path, '');
-      }
+      result.success(null);
     } catch (error) {
       let err: BusinessError = error as BusinessError;
       if (PhotoManagerPlugin.showLog) {
